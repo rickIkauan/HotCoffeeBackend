@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
     admin: {
         type: String,
         required: true,
-        default: 'Não'
+        default: 'Sim'
     }
 })
 
