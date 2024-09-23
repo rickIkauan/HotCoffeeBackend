@@ -40,7 +40,8 @@ exports.loginUser = async (req, res) => {
             sobrenome: user.secondname,
             admin: user.admin,
             email: user.email,
-            userId: user._id
+            userId: user._id,
+            profileImage: user.s3url
         })
     } catch (err) {
         res.status(500).json({ message: 'Ocorreu um erro', err })
@@ -99,5 +100,29 @@ exports.updateProfilePicture = async (req, res) => {
         res.status(200).json(updateUser)
     } catch (err) {
         res.status(500).json({ message: 'Não foi possivel atualizar a foto de perfil', err })
+    }
+}
+
+// Rota para usuário mudar a senha
+exports.userEdit = async (req, res) => {
+    const { email } = req.params
+    const { password: activePass, newPassword } = req.body
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado' })
+
+        const isMatch = await user.comparePassword(activePass)
+        if (!isMatch) return res.status(400).json({ error: 'Senha atual incorreta' })
+
+        if (newPassword) {
+            user.password = newPassword
+        }
+        
+        await user.save()
+
+        res.status(200).json({ message: 'Senha atualizada com sucesso' })
+    } catch (err) {
+        res.status(400).json({ error: err.message })
     }
 }

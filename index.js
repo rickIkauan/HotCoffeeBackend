@@ -7,6 +7,7 @@ require('dotenv').config()
 // Importando Rotas
 const authRoutes = require('./routes/authRoutes')
 const productRoutes = require('./routes/productRoutes')
+const pedidosRoutes = require('./routes/pedidosRoutes')
 
 // Chamada base
 const app = express()
@@ -28,6 +29,7 @@ app.get('/', (req, res) => {
 // Rotas
 app.use('/api/auth', authRoutes)
 app.use('/api/product', productRoutes)
+app.use('/api/pedido', pedidosRoutes)
 
 // Rota alternatica para erro
 app.use((err, req, res, next) => {
